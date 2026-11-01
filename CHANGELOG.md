@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.1.0 (2026-11-01)
+
 ### Added
 
 - The installer for plugins and the site's root files.
