@@ -13,3 +13,11 @@ cd sandbox
 composer config repositories.composer-plugin path ../composer-plugin
 composer update letterncms/composer-plugin
 ```
+
+Its tests need PHP 8.4 and Composer:
+
+```bash
+cd composer-plugin
+composer install
+composer test
+```

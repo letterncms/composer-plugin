@@ -7,10 +7,22 @@
     "require": {
         "composer-plugin-api": "^2.3"
     },
+    "require-dev": {
+        "composer/composer": "^2.3",
+        "phpunit/phpunit": "^12.0"
+    },
     "autoload": {
         "psr-4": {
             "Cms\\ComposerPlugin\\": "src/"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Cms\\ComposerPlugin\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
     },
     "extra": {
         "class": "Cms\\ComposerPlugin\\Plugin"
