@@ -23,11 +23,12 @@ final class InstallerTest extends SiteCase
         return $package;
     }
 
-    public function test_it_takes_plugins_and_nothing_else(): void
+    public function test_it_takes_plugins_and_kits_and_nothing_else(): void
     {
         $installer = $this->installer();
 
         $this->assertTrue($installer->supports('cms-plugin'));
+        $this->assertTrue($installer->supports('cms-kit'));
         $this->assertFalse($installer->supports('library'));
         $this->assertFalse($installer->supports('composer-plugin'));
         $this->assertFalse($installer->supports('cms-theme'));
@@ -41,6 +42,40 @@ final class InstallerTest extends SiteCase
     public function test_a_third_partys_plugin_keeps_its_vendor_in_the_folder_name(): void
     {
         $this->assertSame($this->site.'/plugins/acme-reading-time', $this->installer()->getInstallPath($this->package('acme/reading-time')));
+    }
+
+    public function test_a_kit_goes_in_kits_named_the_same_way(): void
+    {
+        $this->assertSame($this->site.'/kits/fathomline', $this->installer()->getInstallPath($this->package('letterncms/fathomline', 'cms-kit')));
+        $this->assertSame($this->site.'/kits/acme-studio', $this->installer()->getInstallPath($this->package('acme/studio', 'cms-kit')));
+    }
+
+    public function test_a_kit_whose_folder_would_not_be_a_handle_is_refused(): void
+    {
+        $this->expectException(\UnexpectedValueException::class);
+        $this->expectExceptionMessage('kits/acme-Studio.v2');
+        $this->installer()->getInstallPath($this->package('acme/Studio.v2', 'cms-kit'));
+    }
+
+    public function test_a_kit_folder_composer_did_not_put_there_is_never_emptied(): void
+    {
+        $this->write('kits/fathomline/kit.json', '{"handle": "fathomline"}');
+
+        try {
+            $this->installer()->install(new \Composer\Repository\InstalledArrayRepository, $this->package('letterncms/fathomline', 'cms-kit'));
+            $this->fail('a kit someone else put there was replaced');
+        } catch (\UnexpectedValueException $e) {
+            $this->assertStringContainsString("kits/fathomline is already there, and Composer didn't put it there", $e->getMessage());
+        }
+
+        $this->assertSame('{"handle": "fathomline"}', $this->read('kits/fathomline/kit.json'));
+    }
+
+    public function test_a_kit_and_a_plugin_of_one_name_do_not_share_a_folder(): void
+    {
+        $installer = $this->installer();
+
+        $this->assertNotSame($installer->getInstallPath($this->package('letterncms/forms', 'cms-kit')), $installer->getInstallPath($this->package('letterncms/forms')));
     }
 
     public function test_two_vendors_with_the_same_plugin_name_do_not_share_a_folder(): void
