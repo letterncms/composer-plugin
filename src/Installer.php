@@ -53,7 +53,8 @@ final class Installer extends LibraryInstaller
         // Installing empties the folder first: a kit someone put there by hand, or the store did, stays theirs.
         $path = $this->getInstallPath($package);
 
-        if (is_dir($path) && ! is_file($path.'/'.self::MARKER) && (scandir($path) ?: []) !== ['.', '..']) {
+        // A link is a path repository's, which Composer only ever unlinks.
+        if (is_dir($path) && ! is_link($path) && ! is_file($path.'/'.self::MARKER) && (scandir($path) ?: []) !== ['.', '..']) {
             throw new UnexpectedValueException("kits/".basename($path)." is already there, and Composer didn't put it there. Move it away, then require {$package->getPrettyName()} again.");
         }
 
@@ -67,11 +68,11 @@ final class Installer extends LibraryInstaller
         return $target->getType() === 'cms-kit' ? $this->marked($promise, $this->getInstallPath($target)) : $promise;
     }
 
-    /** The marker goes in once the files are there. */
+    /** The marker goes in once the files are there: not through a path repository's link, into the kit's own source. */
     private function marked(?PromiseInterface $promise, string $path): ?PromiseInterface
     {
         $mark = static function () use ($path): void {
-            is_dir($path) && file_put_contents($path.'/'.self::MARKER, "Composer put this kit here. composer remove takes it away.\n");
+            is_dir($path) && ! is_link($path) && file_put_contents($path.'/'.self::MARKER, "Composer put this kit here. composer remove takes it away.\n");
         };
 
         if ($promise === null) {
