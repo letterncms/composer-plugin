@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.2.1 (2026-11-12)
+
 ### Fixed
 
 - A kit from a path repository, which Composer links instead of copying, no longer gets a `.composer-kit` written into its own source.
