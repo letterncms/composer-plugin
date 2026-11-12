@@ -50,7 +50,7 @@ final class Installer extends LibraryInstaller
             return parent::install($repo, $package);
         }
 
-        // Installing empties the folder first: a kit someone put there by hand, or the store did, stays theirs.
+        // Installing empties the folder first: a kit someone put there by hand stays theirs. The store marks its kits as this does.
         $path = $this->getInstallPath($package);
 
         // A link is a path repository's, which Composer only ever unlinks.
