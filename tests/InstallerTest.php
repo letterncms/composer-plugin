@@ -71,6 +71,20 @@ final class InstallerTest extends SiteCase
         $this->assertSame('{"handle": "fathomline"}', $this->read('kits/fathomline/kit.json'));
     }
 
+    public function test_a_kit_composer_links_from_a_path_repository_gets_no_mark_in_its_source(): void
+    {
+        $this->write('source/fathomline/kit.json', '{"handle": "fathomline"}');
+        $this->write('kits/copied/kit.json', '{"handle": "copied"}');
+        symlink($this->site.'/source/fathomline', $this->site.'/kits/fathomline');
+        $marked = new \ReflectionMethod(Installer::class, 'marked');
+
+        $marked->invoke($this->installer(), null, $this->site.'/kits/fathomline');
+        $marked->invoke($this->installer(), null, $this->site.'/kits/copied');
+
+        $this->assertFileDoesNotExist($this->site.'/source/fathomline/'.Installer::MARKER);
+        $this->assertFileExists($this->site.'/kits/copied/'.Installer::MARKER);
+    }
+
     public function test_a_kit_and_a_plugin_of_one_name_do_not_share_a_folder(): void
     {
         $installer = $this->installer();
