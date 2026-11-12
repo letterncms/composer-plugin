@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.2.0 (2026-11-12)
+
 ### Added
 
 - Site kits: a package of type `cms-kit` lands in the site's `kits/` folder, `kits/<name>` for ours and `kits/<vendor>-<name>` for a third party's, where the CMS finds it to apply. Its folder name must be a kit handle (lowercase letters, digits, `-` and `_`), and Composer never empties a `kits/` folder it didn't put there itself: it marks its own with `.composer-kit`.
