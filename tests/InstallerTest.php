@@ -46,7 +46,7 @@ final class InstallerTest extends SiteCase
 
     public function test_a_kit_goes_in_kits_named_the_same_way(): void
     {
-        $this->assertSame($this->site.'/kits/fathomline', $this->installer()->getInstallPath($this->package('letterncms/fathomline', 'cms-kit')));
+        $this->assertSame($this->site.'/kits/studio', $this->installer()->getInstallPath($this->package('letterncms/studio', 'cms-kit')));
         $this->assertSame($this->site.'/kits/acme-studio', $this->installer()->getInstallPath($this->package('acme/studio', 'cms-kit')));
     }
 
@@ -59,29 +59,29 @@ final class InstallerTest extends SiteCase
 
     public function test_a_kit_folder_composer_did_not_put_there_is_never_emptied(): void
     {
-        $this->write('kits/fathomline/kit.json', '{"handle": "fathomline"}');
+        $this->write('kits/studio/kit.json', '{"handle": "studio"}');
 
         try {
-            $this->installer()->install(new \Composer\Repository\InstalledArrayRepository, $this->package('letterncms/fathomline', 'cms-kit'));
+            $this->installer()->install(new \Composer\Repository\InstalledArrayRepository, $this->package('letterncms/studio', 'cms-kit'));
             $this->fail('a kit someone else put there was replaced');
         } catch (\UnexpectedValueException $e) {
-            $this->assertStringContainsString("kits/fathomline is already there, and Composer didn't put it there", $e->getMessage());
+            $this->assertStringContainsString("kits/studio is already there, and Composer didn't put it there", $e->getMessage());
         }
 
-        $this->assertSame('{"handle": "fathomline"}', $this->read('kits/fathomline/kit.json'));
+        $this->assertSame('{"handle": "studio"}', $this->read('kits/studio/kit.json'));
     }
 
     public function test_a_kit_composer_links_from_a_path_repository_gets_no_mark_in_its_source(): void
     {
-        $this->write('source/fathomline/kit.json', '{"handle": "fathomline"}');
+        $this->write('source/studio/kit.json', '{"handle": "studio"}');
         $this->write('kits/copied/kit.json', '{"handle": "copied"}');
-        symlink($this->site.'/source/fathomline', $this->site.'/kits/fathomline');
+        symlink($this->site.'/source/studio', $this->site.'/kits/studio');
         $marked = new \ReflectionMethod(Installer::class, 'marked');
 
-        $marked->invoke($this->installer(), null, $this->site.'/kits/fathomline');
+        $marked->invoke($this->installer(), null, $this->site.'/kits/studio');
         $marked->invoke($this->installer(), null, $this->site.'/kits/copied');
 
-        $this->assertFileDoesNotExist($this->site.'/source/fathomline/'.Installer::MARKER);
+        $this->assertFileDoesNotExist($this->site.'/source/studio/'.Installer::MARKER);
         $this->assertFileExists($this->site.'/kits/copied/'.Installer::MARKER);
     }
 
