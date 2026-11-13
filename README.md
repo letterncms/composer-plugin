@@ -1,6 +1,6 @@
 # Composer plugin
 
-Puts plugins in a site's `plugins/` folder and site kits in `kits/`, the same places the store's installs use, and keeps the site's front controller current. Every site gets it through `letterncms/cms`.
+Puts plugins in a site's `plugins/` folder and sites in `sites/`, the same places the store's installs use, and keeps the site's front controller current. Every site gets it through `letterncms/cms`.
 
 ## Working on it
 
