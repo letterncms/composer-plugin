@@ -2,7 +2,7 @@
     "name": "letterncms/composer-plugin",
     "description": "Puts plugins in the site's plugins/ folder and sites in sites/, and keeps a site's front controller current.",
     "type": "composer-plugin",
-    "version": "0.2.1",
+    "version": "0.3.0",
     "license": "MIT",
     "require": {
         "composer-plugin-api": "^2.3"

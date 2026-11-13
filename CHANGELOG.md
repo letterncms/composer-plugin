@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.3.0 (2026-11-13)
+
 ### Changed
 
 - **Breaking.** Install packages of type `cms-site` in `sites/`, using the new Sites package format.
